@@ -22,6 +22,20 @@ export const mockLostItems: LostItem[] = [
         reportedAt: '2025-10-29T14:20:00Z',
       },
     ],
+    comments: [
+      {
+        id: 'c1',
+        author: 'John Doe',
+        authorEmail: 'john.d@email.com',
+        content: 'I hope you find it soon! Will keep an eye out in the area.',
+        createdAt: '2025-10-28T12:00:00Z',
+      },
+    ],
+    reactions: {
+      heart: 12,
+      pray: 8,
+      support: 15,
+    },
   },
   {
     id: '2',
@@ -35,6 +49,12 @@ export const mockLostItems: LostItem[] = [
     status: 'approved',
     reportedAt: '2025-10-27T15:45:00Z',
     sightings: [],
+    comments: [],
+    reactions: {
+      heart: 5,
+      pray: 3,
+      support: 7,
+    },
   },
   {
     id: '3',
@@ -65,6 +85,20 @@ export const mockLostItems: LostItem[] = [
         reportedAt: '2025-10-26T16:30:00Z',
       },
     ],
+    comments: [
+      {
+        id: 'c2',
+        author: 'Mike Johnson',
+        authorEmail: 'mike.j@email.com',
+        content: 'Good news! The station has it. Call them!',
+        createdAt: '2025-10-27T12:00:00Z',
+      },
+    ],
+    reactions: {
+      heart: 20,
+      pray: 10,
+      support: 25,
+    },
   },
   {
     id: '4',
@@ -78,6 +112,12 @@ export const mockLostItems: LostItem[] = [
     status: 'approved',
     reportedAt: '2025-10-25T11:20:00Z',
     sightings: [],
+    comments: [],
+    reactions: {
+      heart: 8,
+      pray: 6,
+      support: 12,
+    },
   },
   {
     id: '5',
@@ -100,6 +140,27 @@ export const mockLostItems: LostItem[] = [
         reportedAt: '2025-10-25T09:45:00Z',
       },
     ],
+    comments: [
+      {
+        id: 'c3',
+        author: 'Sarah Miller',
+        authorEmail: 'sarah.m@email.com',
+        content: 'Sharing this everywhere! Hope Bella comes home soon.',
+        createdAt: '2025-10-24T20:00:00Z',
+      },
+      {
+        id: 'c4',
+        author: 'Tom Wilson',
+        authorEmail: 'tom.w@email.com',
+        content: 'I live nearby and will look out for her!',
+        createdAt: '2025-10-25T08:00:00Z',
+      },
+    ],
+    reactions: {
+      heart: 45,
+      pray: 30,
+      support: 50,
+    },
   },
   {
     id: '6',
@@ -113,6 +174,12 @@ export const mockLostItems: LostItem[] = [
     status: 'pending',
     reportedAt: '2025-10-30T08:00:00Z',
     sightings: [],
+    comments: [],
+    reactions: {
+      heart: 0,
+      pray: 0,
+      support: 0,
+    },
   },
   {
     id: '7',
@@ -126,5 +193,11 @@ export const mockLostItems: LostItem[] = [
     status: 'pending',
     reportedAt: '2025-10-29T12:00:00Z',
     sightings: [],
+    comments: [],
+    reactions: {
+      heart: 0,
+      pray: 0,
+      support: 0,
+    },
   },
 ];

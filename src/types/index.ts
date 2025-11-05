@@ -10,6 +10,8 @@ export interface LostItem {
   status: 'pending' | 'approved' | 'rejected';
   reportedAt: string;
   sightings: Sighting[];
+  comments: Comment[];
+  reactions: Reactions;
 }
 
 export interface Sighting {
@@ -19,4 +21,18 @@ export interface Sighting {
   location: string;
   notes: string;
   reportedAt: string;
+}
+
+export interface Comment {
+  id: string;
+  author: string;
+  authorEmail: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface Reactions {
+  heart: number;
+  pray: number;
+  support: number;
 }

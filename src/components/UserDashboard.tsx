@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { LogOut, Search, MapPin, DollarSign, Calendar, Eye, Plus, Phone, Mail, User } from 'lucide-react';
+import { LogOut, Search, MapPin, DollarSign, Calendar, Eye, Plus, Phone, Mail, User, Share2, MessageCircle, Heart, HandHeart, Users } from 'lucide-react';
 import { LostItem } from '../types';
 import { mockLostItems } from '../data/mockData';
 import ReportSightingModal from './ReportSightingModal';
 import ReportLostItemModal from './ReportLostItemModal';
+import ShareAndCommentModal from './ShareAndCommentModal';
 
 interface UserDashboardProps {
   userEmail: string;
@@ -14,7 +15,10 @@ function UserDashboard({ userEmail, onLogout }: UserDashboardProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<LostItem | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
-  const approvedItems = mockLostItems.filter(item => item.status === 'approved');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareItem, setShareItem] = useState<LostItem | null>(null);
+  const [items, setItems] = useState(mockLostItems);
+  const approvedItems = items.filter(item => item.status === 'approved');
 
   const filteredItems = approvedItems.filter(item =>
     item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -34,6 +38,44 @@ function UserDashboard({ userEmail, onLogout }: UserDashboardProps) {
     } else {
       return `${Math.floor(diffInHours / 24)}d ago`;
     }
+  };
+
+  const handleAddComment = (itemId: string, content: string) => {
+    setItems(items.map(item => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          comments: [...item.comments, {
+            id: `c${Date.now()}`,
+            author: userEmail.split('@')[0],
+            authorEmail: userEmail,
+            content,
+            createdAt: new Date().toISOString(),
+          }],
+        };
+      }
+      return item;
+    }));
+  };
+
+  const handleAddReaction = (itemId: string, reactionType: 'heart' | 'pray' | 'support') => {
+    setItems(items.map(item => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          reactions: {
+            ...item.reactions,
+            [reactionType]: item.reactions[reactionType] + 1,
+          },
+        };
+      }
+      return item;
+    }));
+  };
+
+  const handleOpenShare = (item: LostItem) => {
+    setShareItem(item);
+    setShowShareModal(true);
   };
 
   return (
@@ -130,6 +172,39 @@ function UserDashboard({ userEmail, onLogout }: UserDashboardProps) {
                     <span>{item.email}</span>
                   </div>
 
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 mb-4 border border-gray-200">
+                    <div className="flex items-center justify-around">
+                      <button
+                        onClick={() => handleAddReaction(item.id, 'heart')}
+                        className="flex items-center space-x-2 text-red-600 hover:text-red-700 transition-colors group"
+                      >
+                        <Heart className="w-5 h-5 group-hover:fill-red-600" />
+                        <span className="text-sm font-semibold">{item.reactions.heart}</span>
+                      </button>
+                      <button
+                        onClick={() => handleAddReaction(item.id, 'pray')}
+                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors group"
+                      >
+                        <HandHeart className="w-5 h-5 group-hover:fill-blue-600" />
+                        <span className="text-sm font-semibold">{item.reactions.pray}</span>
+                      </button>
+                      <button
+                        onClick={() => handleAddReaction(item.id, 'support')}
+                        className="flex items-center space-x-2 text-green-600 hover:text-green-700 transition-colors group"
+                      >
+                        <Users className="w-5 h-5 group-hover:fill-green-600" />
+                        <span className="text-sm font-semibold">{item.reactions.support}</span>
+                      </button>
+                      <button
+                        onClick={() => handleOpenShare(item)}
+                        className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        <MessageCircle className="w-5 h-5" />
+                        <span className="text-sm font-semibold">{item.comments.length}</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {item.sightings.length > 0 && (
                     <div className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-100">
                       <h4 className="font-semibold text-blue-900 mb-2 flex items-center">
@@ -154,13 +229,22 @@ function UserDashboard({ userEmail, onLogout }: UserDashboardProps) {
                     </div>
                   )}
 
-                  <button
-                    onClick={() => setSelectedItem(item)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                  >
-                    <Eye className="w-4 h-4" />
-                    <span>I've Seen This Item</span>
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setSelectedItem(item)}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span>I've Seen This</span>
+                    </button>
+                    <button
+                      onClick={() => handleOpenShare(item)}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span>Share & Support</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -180,6 +264,19 @@ function UserDashboard({ userEmail, onLogout }: UserDashboardProps) {
         <ReportLostItemModal
           userEmail={userEmail}
           onClose={() => setShowReportModal(false)}
+        />
+      )}
+
+      {showShareModal && shareItem && (
+        <ShareAndCommentModal
+          item={shareItem}
+          userEmail={userEmail}
+          onClose={() => {
+            setShowShareModal(false);
+            setShareItem(null);
+          }}
+          onAddComment={handleAddComment}
+          onAddReaction={handleAddReaction}
         />
       )}
     </div>
